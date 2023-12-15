@@ -1,5 +1,6 @@
 package Controller;
 
+import Service.SocialMediaService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -14,9 +15,23 @@ public class SocialMediaController {
      * suite must receive a Javalin object from this method.
      * @return a Javalin app object which defines the behavior of the Javalin controller.
      */
+    SocialMediaService socialMediaService;
+
+    public SocialMediaController() {
+        socialMediaService = new SocialMediaService();
+    }
+
     public Javalin startAPI() {
         Javalin app = Javalin.create();
         app.get("example-endpoint", this::exampleHandler);
+        app.post("register", this::userRegistrationHandler);
+        app.post("login", this::loginHandler);
+        app.post("messages", this::postMessagesHandler);
+        app.get("messages", this::getAllMessagesHandler);
+        app.get("messages/{message_id}", this::getMessageByIdHandler);
+        app.delete("messages/{message_id}", this::deleteMessageByIdHandler);
+        app.put("messages/{message_id}", this::updateMessageByIdHandler);
+        app.get("accounts/{account_id}/messages", this::getMessagesByAccountIdHandler);
 
         return app;
     }
@@ -28,6 +43,40 @@ public class SocialMediaController {
     private void exampleHandler(Context context) {
         context.json("sample text");
     }
+
+    //! TODO: check readme
+    private void userRegistrationHandler(Context ctx) {
+
+    }
+
+    private void loginHandler(Context ctx) {
+
+    }
+
+    private void postMessagesHandler(Context ctx) {
+
+    }
+
+    private void getAllMessagesHandler(Context ctx) {
+
+    }
+
+    private void getMessageByIdHandler(Context ctx) {
+
+    }
+
+    private void deleteMessageByIdHandler(Context ctx) {
+
+    }
+    
+    private void updateMessageByIdHandler(Context ctx) {
+
+    }
+    
+    private void getMessagesByAccountIdHandler(Context ctx) {
+
+    }
+
 
 
 }
