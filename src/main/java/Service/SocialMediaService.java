@@ -23,7 +23,7 @@ public class SocialMediaService {
     }
 
     public Message createMessage(Message message) {
-        return null;
+        return socialMediaDAO.createMessage(message);
     }
 
     public List<Message> getAllMessages() {
