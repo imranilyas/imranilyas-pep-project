@@ -13,6 +13,19 @@ import Util.ConnectionUtil;
 public class SocialMediaDAO {
     // For RegisterUser
     public boolean getUser(String username) {
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            String sql = "select username from account where username = ? limit 1";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, username);
+            ResultSet result = preparedStatement.executeQuery();
+
+            // If there is a result, then there was a found user
+            if(result != null) return true;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
         return false;
     }
 
@@ -21,14 +34,38 @@ public class SocialMediaDAO {
         return false;
     }
 
-    public Message registerUser(Account account) {
+    public Account registerUser(Account account) {
         Connection connection = ConnectionUtil.getConnection();
-        
-        // try {
+        // Check for valid username and password
+        if(account.getUsername().trim().isEmpty() || account.getPassword().trim().length() < 4) {
+            return null;
+        }
+        // Check if username already exists
+        if(getUser(account.getUsername())) {
+            return null;
+        }
 
-        // } catch(SQLException e) {
-        //     System.out.println(e.getMessage());
-        // }
+        try {
+            String sql = "insert into account (username, password) values (?, ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            
+            // Set Parameters
+            preparedStatement.setString(1, account.getUsername());
+            preparedStatement.setString(2, account.getPassword());
+
+            // Execute Query
+            preparedStatement.executeUpdate();
+            ResultSet result = preparedStatement.getGeneratedKeys();
+
+            if(result.next()) {
+                int generatedAccountId = result.getInt(1);
+                System.out.println(generatedAccountId);
+                return new Account(generatedAccountId, account.getUsername(), account.getPassword());
+            }
+
+        } catch(SQLException e) {
+            System.out.println(e.getMessage());
+        }
         return null;
     }
 

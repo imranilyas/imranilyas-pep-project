@@ -13,11 +13,11 @@ public class SocialMediaService {
         socialMediaDAO = new SocialMediaDAO();
     }
 
-    //! TODO
     public Account userRegistration(Account account) {
-        return null;
+        return socialMediaDAO.registerUser(account);
     }
 
+    //! TODO
     public Account login(Account account) {
         return null;
     }

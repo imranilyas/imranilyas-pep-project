@@ -3,6 +3,7 @@ package Controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import Model.Account;
 import Model.Message;
 import Service.SocialMediaService;
 import io.javalin.Javalin;
@@ -49,7 +50,17 @@ public class SocialMediaController {
     }
 
     //! TODO: check readme
-    private void userRegistrationHandler(Context ctx) {
+    private void userRegistrationHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Account account = mapper.readValue(ctx.body(), Account.class);
+        Account newAccount = socialMediaService.userRegistration(account);
+
+        if(newAccount==null) {
+            ctx.status(400);
+        } else {
+            ctx.json(mapper.writeValueAsString(newAccount));
+            ctx.status(200);
+        }
 
     }
 
