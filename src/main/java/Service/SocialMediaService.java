@@ -19,7 +19,7 @@ public class SocialMediaService {
 
     //! TODO
     public Account login(Account account) {
-        return null;
+        return socialMediaDAO.loginUser(account);
     }
 
     public Message createMessage(Message message) {

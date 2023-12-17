@@ -72,13 +72,34 @@ public class SocialMediaDAO {
 
             if(result.next()) {
                 int generatedAccountId = result.getInt(1);
-                System.out.println(generatedAccountId);
                 return new Account(generatedAccountId, account.getUsername(), account.getPassword());
             }
 
         } catch(SQLException e) {
             System.out.println(e.getMessage());
         }
+        return null;
+    }
+
+    public Account loginUser(Account account) {
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            String sql = "select account_id, username, password from account where username = ? and password = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, account.getUsername());
+            preparedStatement.setString(2, account.getPassword());
+            ResultSet result = preparedStatement.executeQuery();
+
+            if(result.first()) {
+                int account_id = result.getInt("account_id");
+                return new Account(account_id, result.getString("username"), result.getString("password"));
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
         return null;
     }
 
