@@ -15,23 +15,36 @@ public class SocialMediaDAO {
     public boolean getUser(String username) {
         Connection connection = ConnectionUtil.getConnection();
         try {
-            String sql = "select username from account where username = ? limit 1";
+            String sql = "select username from account where username = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
             preparedStatement.setString(1, username);
             ResultSet result = preparedStatement.executeQuery();
 
-            // If there is a result, then there was a found user
-            if(result != null) return true;
+            // If the result is empty, then there was no found user
+            if(!result.first()) return false;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return false;
+        return true;
     }
 
     // For CreateMessage
     public boolean getUser(int account_id) {
-        return false;
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            String sql = "select account_id from account where account_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, account_id);
+            ResultSet result = preparedStatement.executeQuery();
+
+            // If the result is empty, then there was no found user
+            if(!result.first()) return false;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return true;
     }
 
     public Account registerUser(Account account) {
@@ -73,7 +86,10 @@ public class SocialMediaDAO {
     public Message createMessage(Message message) {
         Connection connection = ConnectionUtil.getConnection();
         if(message.getMessage_text().isEmpty() || message.getMessage_text().length() > 255) return null;
+        
         // TODO: check if message.getpostedBy is a real user
+        // if(getUser(message.getPosted_by())) return null;
+        
         try {
             // SQL String
             String sql = "insert into message (posted_by, message_text, time_posted_epoch) values (?, ?, ?)";
