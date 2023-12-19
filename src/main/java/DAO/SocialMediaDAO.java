@@ -209,6 +209,25 @@ public class SocialMediaDAO {
         return null;
     }
 
+    public Message updateMessage(int message_id, String message_text) {
+        System.out.println("Something");
+        if(message_text.isEmpty() || message_text.length() > 255) return null;
+
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            String sql = "update message set message_text = ? where message_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, message_text);
+            preparedStatement.setInt(2, message_id);
+            preparedStatement.executeUpdate();
+            return getMessageByMessageId(message_id);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return null;
+    }
+
     public List<Message> getMessagesByAccountId(int account_id) {
         List<Message> list = new ArrayList<>();
         Connection connection = ConnectionUtil.getConnection();

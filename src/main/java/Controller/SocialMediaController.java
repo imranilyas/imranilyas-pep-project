@@ -36,7 +36,7 @@ public class SocialMediaController {
         app.get("messages", this::getAllMessagesHandler);
         app.get("messages/{message_id}", this::getMessageByIdHandler);
         app.delete("messages/{message_id}", this::deleteMessageByIdHandler);
-        app.put("messages/{message_id}", this::updateMessageByIdHandler);
+        app.patch("messages/{message_id}", this::updateMessageByIdHandler);
         app.get("accounts/{account_id}/messages", this::getMessagesByAccountIdHandler);
 
         return app;
@@ -50,7 +50,6 @@ public class SocialMediaController {
         context.json("sample text");
     }
 
-    //! TODO: check readme
     private void userRegistrationHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(ctx.body(), Account.class);
@@ -97,26 +96,35 @@ public class SocialMediaController {
         int message_id = Integer.parseInt(ctx.pathParam("message_id"));
         Message message = socialMediaService.getMessageById(message_id);
         if(message != null) {
-            // ctx.json(socialMediaService.getMessageById(message_id));
             ctx.json(message);
         }
     }
 
     private void deleteMessageByIdHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        // Message message = mapper.readValue(ctx.body(), Message.class);
 
         int message_id = Integer.parseInt(ctx.pathParam("message_id"));
         Message deletedMessage = socialMediaService.deleteMessageById(message_id);
 
-        System.out.println(deletedMessage);
         if(deletedMessage != null) {
             ctx.json(mapper.writeValueAsString(deletedMessage));
         }
     
     }
     
-    private void updateMessageByIdHandler(Context ctx) {
+    private void updateMessageByIdHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+
+        int message_id = Integer.parseInt(ctx.pathParam("message_id"));
+        String newMessage = mapper.readValue(ctx.body(), Message.class).getMessage_text().trim();
+        
+        Message updatedMessage = socialMediaService.updateMessageById(message_id, newMessage);
+
+        if(updatedMessage == null) {
+            ctx.status(400);
+        } else {
+            ctx.json(mapper.writeValueAsString(updatedMessage));
+        }
 
     }
     

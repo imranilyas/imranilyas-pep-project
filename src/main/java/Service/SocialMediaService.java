@@ -38,8 +38,8 @@ public class SocialMediaService {
         return socialMediaDAO.deleteMessage(message_id);
     }
 
-    public Message updateMessageById(int message_id, Message message) {
-        return null;
+    public Message updateMessageById(int message_id, String message) {
+        return socialMediaDAO.updateMessage(message_id, message);
     }
 
     public List<Message> getMessagesByAccountId(int account_id) {
