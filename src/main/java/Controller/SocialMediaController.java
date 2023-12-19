@@ -89,11 +89,15 @@ public class SocialMediaController {
     }
 
     private void getAllMessagesHandler(Context ctx) {
-
+       ctx.json(socialMediaService.getAllMessages()); 
     }
 
     private void getMessageByIdHandler(Context ctx) {
-
+        int message_id = Integer.parseInt(ctx.pathParam("message_id"));
+        Message message = socialMediaService.getMessageById(message_id);
+        if(message != null) {
+            ctx.json(socialMediaService.getMessageById(message_id));
+        }
     }
 
     private void deleteMessageByIdHandler(Context ctx) {
@@ -105,7 +109,8 @@ public class SocialMediaController {
     }
     
     private void getMessagesByAccountIdHandler(Context ctx) {
-
+        int account_id = Integer.parseInt(ctx.pathParam("account_id"));
+        ctx.json(socialMediaService.getMessagesByAccountId(account_id));
     }
 
 

@@ -27,11 +27,11 @@ public class SocialMediaService {
     }
 
     public List<Message> getAllMessages() {
-        return null;
+        return socialMediaDAO.getAllMessages();
     }
     
     public Message getMessageById(int message_id) {
-        return null;
+        return socialMediaDAO.getMessageByMessageId(message_id);
     }
 
     public Message deleteMessageById(int message_id) {
@@ -43,7 +43,7 @@ public class SocialMediaService {
     }
 
     public List<Message> getMessagesByAccountId(int account_id) {
-        return null;
+        return socialMediaDAO.getMessagesByAccountId(account_id);
     }
     
 }
