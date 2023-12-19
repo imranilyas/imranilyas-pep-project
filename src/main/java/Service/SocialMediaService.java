@@ -35,7 +35,7 @@ public class SocialMediaService {
     }
 
     public Message deleteMessageById(int message_id) {
-        return null;
+        return socialMediaDAO.deleteMessage(message_id);
     }
 
     public Message updateMessageById(int message_id, Message message) {

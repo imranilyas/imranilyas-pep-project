@@ -130,6 +130,8 @@ public class SocialMediaDAO {
 
             if(result.next()) {
                 int generatedId = result.getInt(1);
+                System.out.println(generatedId);
+                System.out.println(result);
                 return new Message(generatedId, message.getPosted_by(), message.getMessage_text(), message.getTime_posted_epoch()); 
             }
 
@@ -172,6 +174,37 @@ public class SocialMediaDAO {
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());        
+        }
+        return null;
+    }
+
+    public Message deleteMessage(int message_id) {
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            // Grab Selected Row
+            String searchSql = "select * from message where message_id = ?";
+            PreparedStatement searchStatement = connection.prepareStatement(searchSql);
+            searchStatement.setInt(1, message_id);
+            ResultSet result = searchStatement.executeQuery();
+            
+            // Set Message or Return Before Deletion
+            Message message;
+            if(result.next()) {
+                message = new Message(result.getInt("message_id"), result.getInt("posted_by"), result.getString("message_text"), result.getLong("time_posted_epoch"));
+            } else {
+                return null;
+            }
+            
+            // Delete Row
+            String deleteSql = "delete from message where message_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(deleteSql);
+
+            preparedStatement.setInt(1, message_id);
+            preparedStatement.executeUpdate();
+            return message;
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
         return null;
     }
