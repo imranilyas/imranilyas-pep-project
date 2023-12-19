@@ -17,7 +17,6 @@ public class SocialMediaService {
         return socialMediaDAO.registerUser(account);
     }
 
-    //! TODO
     public Account login(Account account) {
         return socialMediaDAO.loginUser(account);
     }

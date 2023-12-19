@@ -105,13 +105,12 @@ public class SocialMediaDAO {
         return null;
     }
 
-    // NOT DONE YET
     public Message createMessage(Message message) {
         Connection connection = ConnectionUtil.getConnection();
         if(message.getMessage_text().isEmpty() || message.getMessage_text().length() > 255) return null;
         
-        // TODO: check if message.getpostedBy is a real user
-        // if(getUser(message.getPosted_by())) return null;
+        // Check if it is a real user id
+        if(!getUser(message.getPosted_by())) return null;
         
         try {
             // SQL String
@@ -182,18 +181,8 @@ public class SocialMediaDAO {
         Connection connection = ConnectionUtil.getConnection();
         try {
             // Grab Selected Row
-            String searchSql = "select * from message where message_id = ?";
-            PreparedStatement searchStatement = connection.prepareStatement(searchSql);
-            searchStatement.setInt(1, message_id);
-            ResultSet result = searchStatement.executeQuery();
-            
-            // Set Message or Return Before Deletion
-            Message message;
-            if(result.next()) {
-                message = new Message(result.getInt("message_id"), result.getInt("posted_by"), result.getString("message_text"), result.getLong("time_posted_epoch"));
-            } else {
-                return null;
-            }
+            Message message = getMessageByMessageId(message_id);
+            if(message == null) return null;
             
             // Delete Row
             String deleteSql = "delete from message where message_id = ?";
@@ -210,7 +199,6 @@ public class SocialMediaDAO {
     }
 
     public Message updateMessage(int message_id, String message_text) {
-        System.out.println("Something");
         if(message_text.isEmpty() || message_text.length() > 255) return null;
 
         Connection connection = ConnectionUtil.getConnection();

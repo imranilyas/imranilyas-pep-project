@@ -1,7 +1,6 @@
 package Controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Model.Account;
@@ -29,7 +28,6 @@ public class SocialMediaController {
 
     public Javalin startAPI() {
         Javalin app = Javalin.create();
-        app.get("example-endpoint", this::exampleHandler);
         app.post("register", this::userRegistrationHandler);
         app.post("login", this::loginHandler);
         app.post("messages", this::postMessageHandler);
@@ -40,14 +38,6 @@ public class SocialMediaController {
         app.get("accounts/{account_id}/messages", this::getMessagesByAccountIdHandler);
 
         return app;
-    }
-
-    /**
-     * This is an example handler for an example endpoint.
-     * @param context The Javalin Context object manages information about both the HTTP request and response.
-     */
-    private void exampleHandler(Context context) {
-        context.json("sample text");
     }
 
     private void userRegistrationHandler(Context ctx) throws JsonProcessingException {
@@ -61,7 +51,6 @@ public class SocialMediaController {
             ctx.json(mapper.writeValueAsString(newAccount));
             ctx.status(200);
         }
-
     }
 
     private void loginHandler(Context ctx) throws JsonProcessingException {
@@ -109,7 +98,6 @@ public class SocialMediaController {
         if(deletedMessage != null) {
             ctx.json(mapper.writeValueAsString(deletedMessage));
         }
-    
     }
     
     private void updateMessageByIdHandler(Context ctx) throws JsonProcessingException {
@@ -125,14 +113,10 @@ public class SocialMediaController {
         } else {
             ctx.json(mapper.writeValueAsString(updatedMessage));
         }
-
     }
     
     private void getMessagesByAccountIdHandler(Context ctx) {
         int account_id = Integer.parseInt(ctx.pathParam("account_id"));
         ctx.json(socialMediaService.getMessagesByAccountId(account_id));
     }
-
-
-
 }
